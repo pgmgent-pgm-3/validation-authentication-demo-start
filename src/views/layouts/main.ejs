@@ -9,9 +9,9 @@
   <title>An authentication demonstration</title>
 </head>
 <body>
-  {{>navigation}}
+  <%- include('../partials/navigation') %>
   <div id="content">
-    {{{body}}}
+    <%- body %>
   </div>
 
   <script type="text/javascript" type="module" src="/scripts/app.js"></script>

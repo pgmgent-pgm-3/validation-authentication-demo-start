@@ -2,8 +2,6 @@
  * A Page Controller
  */
 
-import { validationResult } from "express-validator";
-import MailTransporter from "../lib/MailTransporter.js";
 
 export const home = async (req, res) => {
   res.render("home", {});

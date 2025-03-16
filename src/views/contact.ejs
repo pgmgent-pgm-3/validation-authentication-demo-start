@@ -12,19 +12,19 @@
             <div class="contact-wrapper">
                 <h3>Stuur Georgette via het wereldwijde internet</h3>
                 <form action="/contact" method="POST">
-                    {{#if flash.message}}
-                    <div class="alert {{ flash.type}}">
-                        {{ flash.message}}
+                    <% if (locals.flash?.message) { %>
+                    <div class="alert <%= flash?.type %>">
+                        <%= locals.flash?.message %>
                     </div>
-                    {{/if}}
-                    {{#each inputs}}
-                        {{>form-input this}}
-                    {{/each}}
+                    <% } %>
+                    <% locals.inputs?.forEach(input => { %>
+                        <%- include('./partials/form-input', input) %>
+                    <% }); %>
                     <div class="footer-container">
                         <button class="btn btn-primary" type="submit">
                             Zend bericht naar Georgette
                         </button>
-                </div>
+                    </div>
                 </form>
             </div>
         </div>

@@ -5,6 +5,7 @@
  */
 import express from "express";
 import bodyParser from "body-parser";
+import expressEjsLayouts from "express-ejs-layouts";
 import { VIEWS_PATH, PORT } from "./consts.js";
 import MailTransporter from "./lib/MailTransporter.js";
 
@@ -37,7 +38,9 @@ app.use(express.static("public"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use(expressEjsLayouts);
 app.set("view engine", "ejs");
+app.set("layout", "layouts/main");
 app.set("views", VIEWS_PATH);
 
 /**

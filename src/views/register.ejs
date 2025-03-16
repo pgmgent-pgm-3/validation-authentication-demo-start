@@ -1,20 +1,16 @@
 <section class="auth-container register">
   <h4>Register</h4>
-  {{#if flash.message}}
-    <div class="alert {{ flash.type}}">
-        {{ flash.message}}
-    </div>
-  {{/if}}
+  <%- include('./partials/form-errors') %>
   <form method="post" action="register">
-    {{#each inputs}}
-      {{>form-input this}}
-    {{/each}}
+    <% locals.inputs?.forEach(input => { %>
+      <%- include('form-input', input) %>
+    <% }); %>
     <div class="input-container">
       <label for="role">Bevoegd als</label>
       <select name="role" id="roles">
-        {{#each roles}}
-          <option value="{{ id }}">{{ name }}</option>
-        {{/each}}
+        <% locals.roles?.forEach(role => { %>
+          <option value="<%= role.id %>"><%= role.name %></option>
+        <% }); %>
       </select>
     </div>
     <div class="footer-container">

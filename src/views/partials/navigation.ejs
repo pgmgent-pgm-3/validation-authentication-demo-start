@@ -12,11 +12,11 @@
     <li>
       <a href="/contact">Contact</a>
     <li>
-      {{#if user}}
-      <a href="/dashboard">Dashboard</a>
-      {{else}}
-      <a href="/login">Webshop</a>
-      {{/if}}
+      <% if (locals.user) { %>
+        <a href="/dashboard">Dashboard</a>
+      <% } else { %>
+        <a href="/login">Webshop</a>
+      <% } %>
     </li>
   </ul>
 </nav>

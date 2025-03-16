@@ -1,0 +1,12 @@
+<h1>Welcome, <%= user.email %></h1>
+
+You are
+<% if (user.role.slug === "editor") { %>}
+  an editor.
+<% } %>
+<% if (user.role.slug === "admin") { %>}
+  an admin.
+<% } %>
+<% if (user.role.slug === "reader") { %>}
+  an reader.
+<% } %>

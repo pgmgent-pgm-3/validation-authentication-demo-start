@@ -1,20 +1,23 @@
+	
 import { body } from "express-validator";
-
+ 
 export default [
-  // fullname
-  body("fullname").notEmpty().withMessage("Vul je naam in"),
-  // email
+  body("fullname")
+    .notEmpty()
+    .withMessage("Volledige naam is een verplicht veld.")
+    .bail()
+    .isLength({ min: 2 })
+    .withMessage("Volledige naam moet minstens twee tekens bevatten."),
   body("email")
     .notEmpty()
-    .withMessage("E-mail is verplicht")
+    .withMessage("E-mail is een verplicht veld.")
     .bail()
     .isEmail()
-    .withMessage("Vul een geldig e-mail adres in"),
-  // message
+    .withMessage("Onjuist e-mailadres"),
   body("message")
     .notEmpty()
-    .withMessage("Vul een bericht in")
+    .withMessage("Bericht is een verplicht veld.")
     .bail()
-    .isLength({ min: 15 })
-    .withMessage("Je bericht moet minimaal 15 tekens bevatten"),
+    .isLength({ min: 10 })
+    .withMessage("Bericht moet minstens tien tekens bevatten."),
 ];

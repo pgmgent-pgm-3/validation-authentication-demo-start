@@ -6,7 +6,7 @@
  * Login
  */
 export const login = async (req, res) => {
-  res.render("login", { layout: "authentication" });
+  res.render("login", { layout: "layouts/authentication" });
 };
 export const postLogin = async (req, res, next) => {};
 
@@ -14,7 +14,7 @@ export const postLogin = async (req, res, next) => {};
  * Register
  */
 export const register = async (req, res) => {
-  res.render("register", { layout: "authentication" });
+  res.render("register", { layout: "layouts/authentication" });
 };
 export const postRegister = async (req, res, next) => {};
 
