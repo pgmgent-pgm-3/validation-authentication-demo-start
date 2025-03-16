@@ -4,10 +4,8 @@
  * ------------------------------
  */
 import express from "express";
-import { create } from "express-handlebars";
 import bodyParser from "body-parser";
 import { VIEWS_PATH, PORT } from "./consts.js";
-import HandlebarsHelpers from "./lib/HandlebarsHelpers.js";
 import MailTransporter from "./lib/MailTransporter.js";
 
 // middleware
@@ -39,13 +37,7 @@ app.use(express.static("public"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// set the view engine: handlebars
-const hbs = create({
-  helpers: HandlebarsHelpers,
-  extname: "hbs",
-});
-app.engine("hbs", hbs.engine);
-app.set("view engine", "hbs");
+app.set("view engine", "ejs");
 app.set("views", VIEWS_PATH);
 
 /**
@@ -80,12 +72,7 @@ app.get("/testmail", (req, res) => {
       from: "georgette@pgm.be",
       to: "iemand@voorbeeld.be",
       subject: "Een lekker geurend mailtje",
-      //html: "Haal nu een gratis <strong>staaltje</strong> bij ons af!",
-      template: "test",
-      context: {
-        title: "This is so cool",
-        message: "This will have bg color",
-      },
+      html: "Haal nu een gratis <strong>staaltje</strong> bij ons af!",
     });
   } catch (error) {
     res.send("Error sending mail: " + error.message);
