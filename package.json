@@ -11,7 +11,9 @@
   "author": "Arteveldehogeschool",
   "contributors": [
     "Frederick Roegiers",
-    "Tim De Paepe"
+    "Tim De Paepe",
+    "Niels Minne",
+    "Karel De Smet"
   ],
   "license": "ISC",
   "dependencies": {
