@@ -8,6 +8,7 @@ import bodyParser from "body-parser";
 import expressEjsLayouts from "express-ejs-layouts";
 import { VIEWS_PATH, PORT } from "./consts.js";
 import MailTransporter from "./lib/MailTransporter.js";
+import cookieParser from "cookie-parser";
 
 // middleware
 import ContactValidation from "./middleware/validation/ContactValidation.js";
@@ -23,6 +24,7 @@ import * as PageController from "./controllers/PageController.js";
 import * as ExampleController from "./controllers/ExampleFormController.js";
 import * as AuthController from "./controllers/AuthController.js";
 import * as ApiUserController from "./controllers/api/UserController.js";
+import AuthRegisterValidation from "./middleware/validation/AuthRegisterValidation.js";
 
 /**
  * ------------------------------
@@ -38,6 +40,8 @@ app.use(express.static("public"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.use(cookieParser());
+
 app.use(expressEjsLayouts);
 app.set("view engine", "ejs");
 app.set("layout", "layouts/main");
@@ -52,7 +56,7 @@ app.set("views", VIEWS_PATH);
 // Auth routes
 app.get("/login", AuthController.login);
 app.get("/register", AuthController.register);
-app.post("/register", AuthController.postRegister, AuthController.register);
+app.post("/register", AuthRegisterValidation, AuthController.postRegister, AuthController.register);
 app.post("/login", AuthController.postLogin, AuthController.login);
 app.post("/logout", AuthController.logout);
 
