@@ -25,6 +25,7 @@ import * as ExampleController from "./controllers/ExampleFormController.js";
 import * as AuthController from "./controllers/AuthController.js";
 import * as ApiUserController from "./controllers/api/UserController.js";
 import AuthRegisterValidation from "./middleware/validation/AuthRegisterValidation.js";
+import AuthLoginValidation from "./middleware/validation/AuthLoginValidation.js";
 
 /**
  * ------------------------------
@@ -57,7 +58,7 @@ app.set("views", VIEWS_PATH);
 app.get("/login", AuthController.login);
 app.get("/register", AuthController.register);
 app.post("/register", AuthRegisterValidation, AuthController.postRegister, AuthController.register);
-app.post("/login", AuthController.postLogin, AuthController.login);
+app.post("/login", AuthLoginValidation, AuthController.postLogin, AuthController.login);
 app.post("/logout", AuthController.logout);
 
 // Page routes

@@ -1,14 +1,62 @@
 import { validationResult } from "express-validator";
 import Role from "../models/Role.js";
 import User from "../models/User.js";
+import bcrypt from "bcrypt";
 
 /**\
  * Login
  */
 export const login = async (req, res) => {
-  res.render("login", { layout: "layouts/authentication" });
+    // input fields
+    const inputs = [
+      {
+        name: "email",
+        label: "E-mail",
+        type: "text",
+        value: req.body?.email ? req.body.email : "",
+        err: req.formErrorFields?.email ? req.formErrorFields["email"] : "",
+      },
+      {
+        name: "password",
+        label: "Password",
+        type: "password",
+        value: req.body?.password ? req.body.password : "",
+        err: req.formErrorFields?.password ? req.formErrorFields["password"] : "",
+      },
+    ];
+  
+    // render the login page
+    res.render("login", {
+      layout: "layouts/authentication",
+      inputs,
+    });
 };
-export const postLogin = async (req, res, next) => {};
+export const postLogin = async (req, res, next) => {
+  try {
+    const errors = validationResult(req);
+    
+    if (!errors.isEmpty()) {
+      req.formErrorFields = {};
+      // ...
+
+
+    } else {
+      const user = await User.query().findOne({
+        email: req.body.email
+      });
+
+      if (user) {
+        const passwordMatches = bcrypt.compare(...);
+
+        if (passwordMatches) {
+          res.redirect("/");
+        }
+      }
+    }
+  } catch (e) {
+    console.log("some error");
+  }
+};
 
 /**
  * Register
@@ -92,8 +140,18 @@ export const postRegister = async (req, res, next) => {
         return next();
       }
  
-      // temp res.send
-      res.send('no errors, registrate the user');
+      	
+      const hashedPassword = bcrypt.hashSync(req.body.password, 10);
+    
+      await User.query().insert({
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
+        email: req.body.email,
+        password: hashedPassword,
+        role_id: parseInt(req.body.role),
+      });
+    
+      res.redirect("/login");
     }
     
   } catch(e) {
