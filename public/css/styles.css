@@ -247,13 +247,3 @@ form .input-container .error {
 .footer-container .btn + .btn {
   margin-left: 10px;
 }
-
-ul.form-errors {
-  padding: 7px 0 7px 10px;
-  background-color: lightcoral;
-  color: white;
-  margin-bottom: 20px;
-  font-size: 0.8rem;
-  list-style-type: disc;
-  list-style-position: inside;
-}

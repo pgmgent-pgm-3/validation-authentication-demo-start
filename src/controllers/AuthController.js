@@ -3,11 +3,7 @@ import Role from "../models/Role.js";
 import User from "../models/User.js";
 import bcrypt from "bcrypt";
 
-/**\
- * Login
- */
 export const login = async (req, res) => {
-    // input fields
     const inputs = [
       {
         name: "email",
@@ -24,45 +20,62 @@ export const login = async (req, res) => {
         err: req.formErrorFields?.password ? req.formErrorFields["password"] : "",
       },
     ];
+
+    const flash = req.flash || {};
   
-    // render the login page
     res.render("login", {
       layout: "layouts/authentication",
       inputs,
+      flash
     });
 };
+
 export const postLogin = async (req, res, next) => {
   try {
     const errors = validationResult(req);
     
     if (!errors.isEmpty()) {
       req.formErrorFields = {};
-      // ...
 
+      errors.array().forEach((error) => {
+        req.formErrorFields[error.path] = error.msg;
+      });
 
+      req.flash = {
+        type: "danger",
+        message: "Er zijn fouten opgetreden",
+      };
+
+      return next();
     } else {
       const user = await User.query().findOne({
         email: req.body.email
       });
 
       if (user) {
-        const passwordMatches = bcrypt.compare(...);
+        const passwordMatches = bcrypt.compareSync(req.body.password, user.password);
 
         if (passwordMatches) {
           res.redirect("/");
+        } else {
+          req.formErrorFields = {
+            password: "Je hebt een ongeldig wachtwoord ingegeven."
+          };
+
+          req.flash = {
+            type: "danger",
+            message: "Er zijn fouten opgetreden",
+          };
+
+          return next();
         }
       }
     }
   } catch (e) {
-    console.log("some error");
+    next(e.message);
   }
 };
-
-/**
- * Register
- */
 	
- 
 export const register = async (req, res) => {
   const inputs = [
     {
@@ -95,11 +108,9 @@ export const register = async (req, res) => {
     },
   ];
  
-  // get the roles
   const roles = await Role.query();
   const flash = req.flash || {};
  
-  // render the register page
   res.render("register", {
     layout: "layouts/authentication",
     inputs,
@@ -107,6 +118,7 @@ export const register = async (req, res) => {
     flash,
   });
 };
+
 export const postRegister = async (req, res, next) => {
   try {
     const errors = validationResult(req);
@@ -159,7 +171,4 @@ export const postRegister = async (req, res, next) => {
   }
 };
 
-/**
- * Logout
- */
 export const logout = async (req, res) => {};

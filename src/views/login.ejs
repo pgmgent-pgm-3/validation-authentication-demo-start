@@ -1,6 +1,5 @@
 <section class="auth-container login">
   <h4>Login</h4>
-  <%- include('./partials/form-errors') %>
   <form method="post" action="login">
     <% locals.inputs?.forEach(input => { %>
       <%- include('./partials/form-input', input) %>

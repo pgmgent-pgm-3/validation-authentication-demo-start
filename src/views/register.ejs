@@ -1,6 +1,5 @@
 <section class="auth-container register">
   <h4>Register</h4>
-  <%- include('./partials/form-errors') %>
   <form method="post" action="register">
     <% locals.inputs?.forEach(input => { %>
       <%- include('./partials/form-input', input) %>
