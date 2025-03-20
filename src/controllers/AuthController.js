@@ -69,6 +69,17 @@ export const postLogin = async (req, res, next) => {
 
           return next();
         }
+      } else {
+        req.formErrorFields = {
+          email: "Deze gebruiker bestaat niet."
+        };
+
+        req.flash = {
+          type: "danger",
+          message: "Er zijn fouten opgetreden",
+        };
+
+        return next();
       }
     }
   } catch (e) {
