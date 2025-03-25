@@ -2,13 +2,96 @@ import { validationResult } from "express-validator";
 import Role from "../models/Role.js";
 import User from "../models/User.js";
 import bcrypt from "bcrypt";
+import jwt from 'jsonwebtoken';
 
 export const login = async (req, res) => {
-   
+  const inputs = [
+    {
+      name: "email",
+      label: "E-mail",
+      type: "text",
+      value: req.body?.email ? req.body.email : "",
+      err: req.formErrorFields?.email ? req.formErrorFields["email"] : "",
+    },
+    {
+      name: "password",
+      label: "Password",
+      type: "password",
+      value: req.body?.password ? req.body.password : "",
+      err: req.formErrorFields?.password ? req.formErrorFields["password"] : "",
+    }
+  ];
+
+  const flash = req.flash || {};
+
+  res.render("login", {
+    layout: "layouts/authentication",
+    inputs, 
+    flash
+  })
+
 };
 
 export const postLogin = async (req, res, next) => {
+  try {
+    const errors = validationResult(req)
 
+    if (!errors.isEmpty()) {
+      req.formErrorFields = {};
+
+      errors.array().forEach((error) => {
+        req.formErrorFields[error.path] = error.msg;
+      });
+
+      req.flash = {
+        type: "danger",
+        message: "Er zijn fouten opgetreden"
+      }
+
+      return next();
+    }
+
+    const user = await User.query().findOne({
+      email: req.body.email
+    })
+    if (!user) {
+      req.formErrorFields = { email: "Deze gebruiker bestaat niet" };
+      req.flash = {
+        type: "danger",
+        message: "Er zijn fouten opgetreden."
+      };
+
+      return next()
+    }
+
+    if (!bcrypt.compareSync(req.body.password, user.password)) {
+      req.formErrorFields = { password: "Je hebt een ongeldig wachtwoord ingegeven." };
+      req.flash = {
+        type: "danger",
+        message: "Er zijn fouten opgetreden",
+      };
+      return next();
+    }
+
+    //create jwt token
+    const token = jwt.sign({
+      userId: user.id, email: user.email
+    }, process.env.TOKEN_SALT,
+      {
+        expiresIn: '1h'
+      })
+    
+    //add cookie
+    res.cookie('token', token, { httpOnly: true });
+
+    //to home page
+    res.redirect('/')
+
+
+  }
+  catch (e) {
+    next(e.message)
+  }
 };
 	
 export const register = async (req, res) => {
